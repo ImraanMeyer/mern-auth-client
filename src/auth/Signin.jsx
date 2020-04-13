@@ -8,19 +8,29 @@ import { ToastContainer, toast } from 'react-toastify';
 import { authenticate, isAuth } from './Helpers';
 
 import 'react-toastify/dist/ReactToastify.min.css';
+import Google from './Google';
+import Facebook from './Facebook';
 
 const Signin = ({ history }) => {
 	// Signup State
 	const [ values, setValues ] = useState({
 		email: 'imraan.meyer97@gmail.com',
 		password: 'imower12',
-		buttonText: 'Submit'
+		buttonText: 'Submit',
+		thisComponent: 'Signin'
 	});
 
-	const { email, password, buttonText } = values;
+	const { email, password, buttonText, thisComponent } = values;
 
 	const handleChange = (name) => (e) => {
 		setValues({ ...values, [name]: e.target.value });
+	};
+
+	const informParent = (response) => {
+		authenticate(response, () => {
+			toast.success(`Hey ${response.data.user.name}, Welcome back!`);
+			isAuth() && isAuth().role === 'admin' ? history.push('/admin') : history.push('/private');
+		});
 	};
 
 	const clickSubmit = (e) => {
@@ -72,10 +82,17 @@ const Signin = ({ history }) => {
 				<ToastContainer />
 				{isAuth() ? <Redirect to="/" /> : null}
 				<h1 className="p-5 text-center">Signin</h1>
+
+				<div className="d-flex p-2 bd-highlight" style={{justifyContent: 'space-between'}}>
+					<Google informParent={informParent} thisComponent={thisComponent} />
+					<Facebook informParent={informParent} thisComponent={thisComponent} />
+				</div>
 				{signinForm()}
 
 				<br />
-				<Link to="/auth/password/forgot" className="btn btn-sm btn-outline-danger">Forgot Password</Link>
+				<Link to="/auth/password/forgot" className="btn btn-sm btn-outline-danger">
+					Forgot Password
+				</Link>
 			</div>
 		</Layout>
 	);

@@ -10,6 +10,7 @@ import Admin from './core/Admin';
 import AdminRoute from './auth/AdminRoute';
 import Forgot from './auth/Forgot';
 import Reset from './auth/Reset';
+import pageNotFound from './core/PageNotFound';
 
 const Routes = () => {
     return(
@@ -23,6 +24,7 @@ const Routes = () => {
                 <AdminRoute path="/admin" exact component={Admin} /> 
                 <Route path="/auth/password/forgot" exact component={Forgot} /> 
                 <Route path="/auth/password/reset/:token" exact component={Reset} /> 
+                <Route path="*" component={pageNotFound} />
             </Switch>
         </BrowserRouter>
     )

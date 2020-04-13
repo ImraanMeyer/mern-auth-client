@@ -5,24 +5,34 @@ import Layout from '../core/Layout';
 
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { isAuth } from './Helpers';
+import { isAuth, authenticate } from './Helpers';
 
 import 'react-toastify/dist/ReactToastify.min.css';
+import Google from './Google';
+import Facebook from './Facebook';
 
-const Signup = () => {
+const Signup = ({history}) => {
 	// Signup State
 	const [ values, setValues ] = useState({
 		name: 'Imraan',
 		email: 'imraan.meyer97@gmail.com',
 		password: 'imower12',
-		buttonText: 'Submit'
+		buttonText: 'Submit',
+		thisComponent: 'Signup'
 	});
 
-	const { name, email, password, buttonText } = values;
+	const { name, email, password, buttonText, thisComponent } = values;
 
 	const handleChange = (name) => (e) => {
 		setValues({ ...values, [name]: e.target.value });
 	};
+
+	const informParent = response => {
+		authenticate(response, () => {
+			toast.success(`Hey ${response.data.user.name}, Welcome back!`);
+			isAuth() && isAuth().role === 'admin' ? history.push('/admin') : history.push('/private');
+		});
+	}
 
 	const clickSubmit = (e) => {
 		e.preventDefault();
@@ -74,6 +84,10 @@ const Signup = () => {
 				<ToastContainer />
 				{isAuth() ? <Redirect to="/"/> : null}
 				<h1 className="p-5 text-center">Signup</h1>
+				<div className="d-flex p-2 bd-highlight" style={{justifyContent: 'space-between'}}>
+					<Google informParent={informParent} thisComponent={thisComponent} />
+					<Facebook informParent={informParent} thisComponent={thisComponent} />
+				</div>
 				{signupForm()}
 
 				<br />
