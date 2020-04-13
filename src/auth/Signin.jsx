@@ -14,8 +14,8 @@ import Facebook from './Facebook';
 const Signin = ({ history }) => {
 	// Signup State
 	const [ values, setValues ] = useState({
-		email: 'imraan.meyer97@gmail.com',
-		password: 'imower12',
+		email: '',
+		password: '',
 		buttonText: 'Submit',
 		thisComponent: 'Signin'
 	});
